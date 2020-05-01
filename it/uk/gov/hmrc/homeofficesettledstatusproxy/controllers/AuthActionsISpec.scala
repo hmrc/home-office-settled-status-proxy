@@ -25,21 +25,11 @@ class AuthActionsISpec extends AuthActionISpecSetup {
 
     }
 
-    "return 403 Forbidden when AuthorisationException" in {
+    "return 403 Forbidden otherwise" in {
       givenRequestIsNotAuthorised("")
 
       val result = TestController.withAuthorisedWithStride
       status(result) shouldBe 403
-    }
-
-    "do not catch ordinary exceptions" in {
-      givenAuthorisedForStride
-
-      an[RuntimeException] shouldBe thrownBy {
-        TestController.withAuthorisedWithStride {
-          throw new RuntimeException
-        }
-      }
     }
 
   }
@@ -62,11 +52,6 @@ trait AuthActionISpecSetup extends AppBaseISpec {
     def withAuthorisedWithStride[A]: Result =
       await(super.authorisedWithStride {
         Future.successful(Ok("foo"))
-      })
-
-    def withAuthorisedWithStride[A](raiseException: => Nothing): Result =
-      await(super.authorisedWithStride {
-        Future.successful(raiseException)
       })
 
   }

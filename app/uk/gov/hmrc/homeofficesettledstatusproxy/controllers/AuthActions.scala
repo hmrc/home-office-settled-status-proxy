@@ -33,7 +33,7 @@ trait AuthActions extends AuthorisedFunctions {
     ec: ExecutionContext): Future[Result] =
     authorised(AuthProviders(PrivilegedApplication))(body)
       .recover {
-        case _: AuthorisationException =>
+        case e =>
           Forbidden("PrivilegedApplication required.")
       }
 
